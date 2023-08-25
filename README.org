@@ -1,4 +1,4 @@
-#+TITLE: Standard Model precision physics
+#+TITLE: Standard Model Precision Physics
 #+AUTHOR: Alexander Huss
 #+STARTUP: showall
 #+LATEX_HEADER: \usepackage[a4paper]{geometry}
