@@ -21,7 +21,7 @@ We denote the emitting particle by "$X$" and $C_X$ is the associated colour fact
 For quarks, $C_X=C_F=\tfrac{4}{3}$ and for gluons $C_X=C_A=3$.
 
 For any parton shower, we need to choose an evolution variable w.r.t. which we want to generate ordered emissions (angle $\theta$, transverse momentum $k_T$, virtuality $q^2$, ...).
-We will perform a slight change of variables, $k_T \propto E \theta$ (transverse momentum w.r.t. the parent parton) and $z \propto E$ (energy fraction of the emitted gluon) and integrate out the momentum fraction with the $k_T$ constraint to obtain the emission probabilitiy
+We will perform a slight change of variables, $k_T \propto E \theta$ (transverse momentum w.r.t. the parent parton) and $z \propto E$ (energy fraction of the emitted gluon) and integrate out the momentum fraction with the $k_T$ constraint to obtain the emission probability
 \begin{align}
   \mathrm{d}\mathcal{P}_\text{emit}
   &=
@@ -71,7 +71,7 @@ which has a simple solution
 \end{align}
 which now has the large logarithm in the exponent.
 This solution therefore accomplishes exactly what we wanted: sum up the problematic logarithms to all orders, and in doing so, tame the otherwise divergent behaviour ($k_T\to0$).
-It turns out that we can use the Sudakov form factor to sample successive emissions (it is a Markovian process), which we discuss in the next section together with a siple implementation.
+It turns out that we can use the Sudakov form factor to sample successive emissions (it is a Markovian process), which we discuss in the next section together with a simple implementation.
 
 * Implementation
 

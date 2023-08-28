@@ -1,4 +1,4 @@
-% Created 2023-08-26 Sat 15:42
+% Created 2023-08-28 Mon 17:37
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -33,11 +33,11 @@
 
 
 \section{Introduction}
-\label{sec:orgc65571d}
+\label{sec:org06cc658}
 We will investigate the gluon-emission probability off quarks and gluons and use that to implement a \textbf{very} simplified parton shower (single final-state leg, only primary branching, leading double-log, only \(k_T\) and not proper kinematics, \ldots{}).
 
 \section{Emission probability and the Sudakov form factor}
-\label{sec:orgf14f55e}
+\label{sec:orge8eba72}
 In the leading double-log approximation (soft \emph{and} collinear emission), we have seen in the lecture that the emission probability is given as
 \begin{align}
   \mathrm{d}\omega_{X\to X+g}
@@ -50,7 +50,7 @@ We denote the emitting particle by ``\(X\)'' and \(C_X\) is the associated colou
 For quarks, \(C_X=C_F=\tfrac{4}{3}\) and for gluons \(C_X=C_A=3\).
 
 For any parton shower, we need to choose an evolution variable w.r.t. which we want to generate ordered emissions (angle \(\theta\), transverse momentum \(k_T\), virtuality \(q^2\), \ldots{}).
-We will perform a slight change of variables, \(k_T \propto E \theta\) (transverse momentum w.r.t. the parent parton) and \(z \propto E\) (energy fraction of the emitted gluon) and integrate out the momentum fraction with the \(k_T\) constraint to obtain the emission probabilitiy
+We will perform a slight change of variables, \(k_T \propto E \theta\) (transverse momentum w.r.t. the parent parton) and \(z \propto E\) (energy fraction of the emitted gluon) and integrate out the momentum fraction with the \(k_T\) constraint to obtain the emission probability
 \begin{align}
   \mathrm{d}\mathcal{P}_\text{emit}
   &=
@@ -100,13 +100,13 @@ which has a simple solution
 \end{align}
 which now has the large logarithm in the exponent.
 This solution therefore accomplishes exactly what we wanted: sum up the problematic logarithms to all orders, and in doing so, tame the otherwise divergent behaviour (\(k_T\to0\)).
-It turns out that we can use the Sudakov form factor to sample successive emissions (it is a Markovian process), which we discuss in the next section together with a siple implementation.
+It turns out that we can use the Sudakov form factor to sample successive emissions (it is a Markovian process), which we discuss in the next section together with a simple implementation.
 
 \section{Implementation}
-\label{sec:org9a3dcd4}
+\label{sec:org620f142}
 
 \subsection{Interlude: Sampling}
-\label{sec:orgbb4f2c6}
+\label{sec:org6a54f45}
 Assume we have a uniform random number generator at our disposal sampling values in the range \(r\in[0,1]\).
 We wish to generate samples \(x_i\) drawn from a probability distribution \(p(x)\).
 In the so-called \emph{inversion method}, we use the fact that the \emph{cumulant} distribution, \(P(x) = \int_{-\infty}^x\mathrm{d}x' p(x')\), is a strictly monotonic function with values in \(P(x)\in[0,1]\) (it is a probability).
@@ -120,7 +120,7 @@ This can be accomplished by drawing another uniform random number \(s_i\in[0,1]\
 
 
 \subsection{Our Toy Shower}
-\label{sec:orgfa444cd}
+\label{sec:orgfa7374b}
 With the Sudakov form factor in Eq. \eqref{eq:sud} at hand, we can easily iterate the sampling of emissions using the \emph{inversion method} described above given that the cumulant that corresponds to the probability for the \emph{next emission} is precisely the Sudakov.
 The steps of the shower are:
 \begin{enumerate}
@@ -191,7 +191,7 @@ if __name__ == "__main__":
 \end{minted}
 
 \section{Playground}
-\label{sec:orgcce2259}
+\label{sec:org1edfcf6}
 Let us use the implementation to generate some ``events''
 \begin{minted}[frame=lines,fontsize=\scriptsize]{shell}
 #> N, sum, log(sum), first, log(first)
