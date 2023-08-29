@@ -29,9 +29,9 @@ if __name__ == "__main__":
         raise RuntimeError("I expect at least two arguments:  kt_max [g|q]")
     kt_max = float(sys.argv[1])  # the hard scale
     kt_cut = 1.  # shower cutoff
-    if sys.argv[2] == "q":
+    if sys.argv[2].lower() == "q":
         CX = 4. / 3.
-    elif sys.argv[2] == "g":
+    elif sys.argv[2].lower() == "g":
         CX = 3.
     else:
         raise RuntimeError("unrecognised parton: {}".format(sys.argv[2]))
@@ -41,8 +41,6 @@ if __name__ == "__main__":
         nevents = int(sys.argv[4])
     else:
         nevents = 1000
-    #> define a log histogram
-    xs = [x for x in np.logspace(-5, 0, 50)]
     for i in range(nevents):
         print("#event {} [{} {} {} {} {}]".format(i, kt_max, sys.argv[2], CX,
                                                   alphas, nevents))

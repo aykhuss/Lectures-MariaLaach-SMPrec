@@ -1,4 +1,4 @@
-% Created 2023-08-28 Mon 17:37
+% Created 2023-08-29 Tue 18:48
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -23,7 +23,7 @@
  pdftitle={Parton Showers},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 28.2 (Org mode 9.7)}, 
+ pdfcreator={Emacs 29.1 (Org mode 9.7)}, 
  pdflang={English}}
 \begin{document}
 
@@ -33,11 +33,11 @@
 
 
 \section{Introduction}
-\label{sec:org06cc658}
+\label{sec:orgcef7a28}
 We will investigate the gluon-emission probability off quarks and gluons and use that to implement a \textbf{very} simplified parton shower (single final-state leg, only primary branching, leading double-log, only \(k_T\) and not proper kinematics, \ldots{}).
 
 \section{Emission probability and the Sudakov form factor}
-\label{sec:orge8eba72}
+\label{sec:org2c20b3a}
 In the leading double-log approximation (soft \emph{and} collinear emission), we have seen in the lecture that the emission probability is given as
 \begin{align}
   \mathrm{d}\omega_{X\to X+g}
@@ -103,10 +103,10 @@ This solution therefore accomplishes exactly what we wanted: sum up the problema
 It turns out that we can use the Sudakov form factor to sample successive emissions (it is a Markovian process), which we discuss in the next section together with a simple implementation.
 
 \section{Implementation}
-\label{sec:org620f142}
+\label{sec:orga5ebe95}
 
 \subsection{Interlude: Sampling}
-\label{sec:org6a54f45}
+\label{sec:org59f1067}
 Assume we have a uniform random number generator at our disposal sampling values in the range \(r\in[0,1]\).
 We wish to generate samples \(x_i\) drawn from a probability distribution \(p(x)\).
 In the so-called \emph{inversion method}, we use the fact that the \emph{cumulant} distribution, \(P(x) = \int_{-\infty}^x\mathrm{d}x' p(x')\), is a strictly monotonic function with values in \(P(x)\in[0,1]\) (it is a probability).
@@ -120,7 +120,7 @@ This can be accomplished by drawing another uniform random number \(s_i\in[0,1]\
 
 
 \subsection{Our Toy Shower}
-\label{sec:orgfa7374b}
+\label{sec:org7425ebd}
 With the Sudakov form factor in Eq. \eqref{eq:sud} at hand, we can easily iterate the sampling of emissions using the \emph{inversion method} described above given that the cumulant that corresponds to the probability for the \emph{next emission} is precisely the Sudakov.
 The steps of the shower are:
 \begin{enumerate}
@@ -165,9 +165,9 @@ if __name__ == "__main__":
         raise RuntimeError("I expect at least two arguments:  kt_max [g|q]")
     kt_max = float(sys.argv[1])  # the hard scale
     kt_cut = 1.  # shower cutoff
-    if sys.argv[2] == "q":
+    if sys.argv[2].lower() == "q":
         CX = 4. / 3.
-    elif sys.argv[2] == "g":
+    elif sys.argv[2].lower() == "g":
         CX = 3.
     else:
         raise RuntimeError("unrecognised parton: {}".format(sys.argv[2]))
@@ -177,8 +177,6 @@ if __name__ == "__main__":
         nevents = int(sys.argv[4])
     else:
         nevents = 1000
-    #> define a log histogram
-    xs = [x for x in np.logspace(-5, 0, 50)]
     for i in range(nevents):
         print("#event {} [{} {} {} {} {}]".format(i, kt_max, sys.argv[2], CX,
                                                   alphas, nevents))
@@ -191,7 +189,7 @@ if __name__ == "__main__":
 \end{minted}
 
 \section{Playground}
-\label{sec:org1edfcf6}
+\label{sec:orgc60672d}
 Let us use the implementation to generate some ``events''
 \begin{minted}[frame=lines,fontsize=\scriptsize]{shell}
 #> N, sum, log(sum), first, log(first)
