@@ -11,7 +11,7 @@ In the lectures we have seen a brief overview of the $q_T$ resummation formalism
 We will have a closer look at the main results here and highlight some features.
 
 * $q_T$ resummation
-In the leading double-logarithmic approximation, we have found the result
+In the leading double-logarithmic approximation, we have found the following result in impact parameter space
 #+name: eq:b-space
 \begin{align}
   \frac{1}{\sigma_0}\,\frac{\mathrm{d}\sigma}{\mathrm{d}q_T^2}
@@ -22,18 +22,19 @@ In the leading double-logarithmic approximation, we have found the result
   \Big]
   \,,
 \end{align}
-where we have completely ignored effects from subleading logarithms, the running of the strong coupling, and parton distributions functions.
-Nontheless, this simple formula already allows us to inspect some important features of $q_T$ resummation.
+where we have completely ignored effects from sub-leading logarithms, the running of the strong coupling, and parton distributions functions.
+Nonetheless, this simple formula already allows us to inspect some important features of $q_T$ resummation, which we will inspect in the following.
 
 
 * Implementation
+We start with a simple implementation of the above formula.
 
 ** Python
-The integral is a bit nasty because of the oscillating behaviour of the Bessel funtion $J_0$ so we need to adapt the =scipy.integrate= settings a little bit.
-Despite that, the implementation is straighforward:
+The integral is a bit nasty because of the oscillating behaviour of the Bessel funtion $J_0$ so we need to adjust the =scipy.integrate= settings a little bit to reach a desired accuracy.
+Despite that, the implementation is straightforward:
 #+INCLUDE: "main.py" src python
 
-And we can generate some data files for Drell-Yan and Higgs production
+And we can generate some data files for Drell-Yan and Higgs production where in the latter we simply swap out the colour charge $C_F \to C_A$ for the gluon-fusion process.
 #+begin_src shell :results silent
 python main.py  91 q > data_dy.dat
 python main.py 125 g > data_h.dat
@@ -74,6 +75,7 @@ set colorsequence podo
 set log x
 set xlabel 'q_T^2 [GeV^2]'
 set format x "%.0t·10^{%T}"
+set xrange [*:1e2]
 set log y
 set ylabel '(1/σ_0) (dσ / dq_T^2) [GeV^{-2}]'
 
@@ -91,13 +93,13 @@ plot "data_dy.dat" u ($1**2):2 w lp ls 1 t 'b-space', \
 #+RESULTS:
 [[file:plot_QT2.png]]
 
-What is important to notice here is that the leading expression shows a strikingly different behaviour in the small $q_T^2$ limit compared to the b-space formula.
+We notice that the leading expression shows a strikingly different behaviour in the small $q_T^2$ limit compared to the b-space formula.
 The physical interpretation is quite clear: the leading term corresponds to restricting /all/ gluon emissions to have $k_T$ below the gauge-boson transverse momentum $q_T$.
 This gives a suppression at low $q_T$ that is stronger than any power and as a consequence, the sub-leading effect suddenly becomes the leading one.
 In this situation, the small-$q_T$ region is not restricted to only soft gluon emissions but instead by multiple gluon emissions that can individually have $k_T > q_T$ but they /balance out/ in the azimuthal plane.
 By formulating the resummation in impact parameter space, this feature is automatically incorporated in the prediction.
 
-This non-vanishing intercept in $\mathrm{d}\sigma/\mathrm{d}q_T^2$ for $q_T\to0$ is a very important feature of trensverse momentum resummation.
+This non-vanishing intercept in $\mathrm{d}\sigma/\mathrm{d}q_T^2$ for $q_T\to0$ is a very important feature of transverse momentum resummation.
 In fact, we can compute what this intercept is
 \begin{align}
   \frac{1}{\sigma_0}\,\frac{\mathrm{d}\sigma}{\mathrm{d}q_T^2} \biggr\rvert_{q_T=0}
@@ -106,33 +108,52 @@ In fact, we can compute what this intercept is
   \,.
 \end{align}
 
-We have also superimposed a dotted line obtained from the Mathematica implementation, which is in good agreement so numerics appear to be under good control.
-Note that in my experimentations, Vegas appeared to struggle quite a bit with the oscillating behaviour of the integrand.
+We have also superimposed a dotted line obtained from the Mathematica implementation, which is in good agreement so numerics appear to be under good control in the relevant regions.
+At high $q_T$, the oscillations become very severe rendering the pPython predictions less reliable (with larger integration errors).
 
 ** Transverse Momentum Distributioins
-We now look at the transverse momentum distrubution, given by
+We now look at the transverse momentum distribution, which we simply get by
 \begin{align}
-  \mathrm{d}\sigma/\mathrm{d}q_T
+  \frac{\mathrm{d}\sigma}{\mathrm{d}q_T}
   &=
-  2 q_T \; \mathrm{d}\sigma/\mathrm{d}q_T^2
+  2 q_T \; \frac{\mathrm{d}\sigma}{\mathrm{d}q_T^2}
   \,,
 \end{align}
-and which does vanish in the $q_T\to0$ limit like a power.
-
+from the data we generated.
+We can contrast it to the divegent behaviour
+\begin{align}
+  \frac{1}{\sigma_0}\,\frac{\mathrm{d}\sigma}{\mathrm{d}q_T^2}
+  &=
+  \frac{\alpha_s}{\pi}\, C_F \, \frac{\ln(Q^2 q_T^2)}{q_T^2}
+\end{align}
+of an NLO fixed-order prediction (dashed lines).
 #+begin_src gnuplot :file plot_dy.png
 reset
 set terminal pngcairo enhanced
 set colorsequence podo
 
 set log x
+set xrange [*:1e2]
 set xlabel 'q_T [GeV]'
 set format x "%.0t·10^{%T}"
 unset log y
+set yrange [0:0.2]
 set ylabel '(1/σ_0) (dσ / dq_T) [GeV^{-1}]'
 
-plot "data_dy.dat" u 1:(2.*$1*$2) w lp ls 1 t 'Drell-Yan', \
-     "data_h.dat"  u 1:(2.*$1*$2) w lp ls 2 t 'Higgs'
+set key top left
+
+#> set parameters here according to how the data was generated
+as = 0.118
+fo(qt,CX,Q) = (as*CX/pi) * (2./qt) * log(Q**2/qt**2)
+
+plot "data_dy.dat" u 1:(2.*$1*$2)        w lp ls 1 t 'Drell-Yan', \
+     "+"           u 1:(fo($1,4./3.,91)) w l  ls 1 dt 3 notitle, \
+     "data_h.dat"  u 1:(2.*$1*$2*5)      w lp ls 2 t 'Higgs × 5', \
+     "+"           u 1:(fo($1,3,125)*5)  w l  ls 2 dt 3 notitle
 #+end_src
 
 #+RESULTS:
 [[file:plot_dy.png]]
+Note that $\mathrm{d}\sigma/\mathrm{d}q_T$ vanishes for $q_T\to0$, however, the $q_T^2$ behaviour we discussed in the previous section makes it a power-like suppression rather than an exponential one we would get from the naive leading behaviour.
+The resummation tames the divergent fixed-order behaviour and the turn-around point is also often called the "Sudakov peak".
+We see that due to the larger colour charge in the gluon-induced Higgs process ($C_A = 3 > \tfrac{4}{3} = C_F$), the localtion of the Sudakov peak is further to the right.

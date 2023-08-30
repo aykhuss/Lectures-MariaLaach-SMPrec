@@ -22,8 +22,8 @@ if __name__ == "__main__":
     if len(sys.argv) < 3:
         raise RuntimeError("I expect at least two arguments:  Q [g|q]")
     Q = float(sys.argv[1])  # the hard scale
-    pow_low = -4
-    pow_upp = floor(log10(Q)) # ceil(log10(Q/2.))
+    pow_low = -3
+    pow_upp = ceil(log10(Q/2.)) # floor(log10(Q))
     if sys.argv[2].lower() == "q":
         CX = 4. / 3.
     elif sys.argv[2].lower() == "g":
@@ -46,6 +46,6 @@ if __name__ == "__main__":
                         np.inf,
                         args=(qt, Q, CX),
                         epsabs=0.,
-                        epsrel=1e-3,
-                        limit=50000)
+                        epsrel=1e-4,
+                        limit=100000)
         print("{}  {} {}".format(qt, val, err))
