@@ -1,4 +1,4 @@
-% Created 2023-07-24 Mon 16:34
+% Created 2023-09-08 Fri 14:11
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -23,7 +23,7 @@
  pdftitle={The Drell--Yan process: \(\mathrm{p}\mathrm{p} \to \ell^+\ell^-\)},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 28.2 (Org mode 9.7)}, 
+ pdfcreator={Emacs 29.1 (Org mode 9.7)}, 
  pdflang={English}}
 \begin{document}
 
@@ -33,15 +33,15 @@
 
 
 \section{Introduction}
-\label{sec:orga7871c1}
+\label{sec:org0ada12e}
 We will implement the process \(\mathrm{p}\mathrm{p} \to \ell^+\ell^-\).
 This gives us access to a simple hadron-collider process that constitutes a ``Standard Candle'' at the LHC and has a wide range of applications.
 
 \section{Cross section}
-\label{sec:orgef4c443}
+\label{sec:orgcc8a129}
 
 \subsection{Partonic cross section}
-\label{sec:orgc9f1564}
+\label{sec:orgb4e4f52}
 
 The squared Matrix Element is essentially the same as the one we looked at in the \(\mathrm{e}^+\mathrm{e}^- \to \mu^+ \mu^-\) case.
 To make life a little easier for us, we integrated out the kinematics of the \(\mathrm{Z}/\gamma^*\to\ell^+\ell^-\) system.
@@ -89,7 +89,7 @@ that we can use to assemble the \emph{partonic} cross section:
 \end{align}
 
 \subsubsection{Implementation}
-\label{sec:orgafc8e42}
+\label{sec:orgb7f90a7}
 We'll use a simple class to save and retrieve Standard Model parameters including some convenience functions.
 We next implement the different structure functions (we need the additional quark id \texttt{qid} to distinguish up-type from down-type quarks as they have different couplings to the Z boson.
 \begin{minted}[frame=lines,fontsize=\scriptsize]{python}
@@ -117,7 +117,7 @@ def cross_partonic(shat: float, qid: int, par=PARAM) -> float:
 \end{minted}
 
 \subsection{Hadronic cross section and lepton-pair observables}
-\label{sec:org77471b1}
+\label{sec:org0fecc6c}
 The hadronic cross section is obtained by convoluting the partonic one with the parton distribution functions:
 \begin{align}
   \sigma_{A B \to \ell^+\ell^-} (P_A, P_B)
@@ -144,7 +144,7 @@ Being differential in these two observables, we're left with no more integration
 \end{align}
 
 \subsubsection{Implementation}
-\label{sec:org7397e88}
+\label{sec:org0c4b20a}
 Let's implement the hadronic differential cross section
 \begin{minted}[frame=lines,fontsize=\scriptsize]{python}
 def diff_cross(Ecm: float, Mll: float, Yll: float, par=PARAM) -> float:
@@ -175,10 +175,10 @@ def diff_cross(Ecm: float, Mll: float, Yll: float, par=PARAM) -> float:
 
 
 \section{Playground}
-\label{sec:org0694658}
+\label{sec:org11d8d4d}
 
 \subsection{Export source code}
-\label{sec:org23ae6f9}
+\label{sec:org33470c6}
 We can export the python source code to a file \texttt{main.py}:
 \begin{minted}[frame=lines,fontsize=\scriptsize]{python}
 import lhapdf
@@ -305,7 +305,7 @@ by using the \texttt{tangle} command
 \end{minted}
 
 \subsection{Comparison to data}
-\label{sec:org6ea461c}
+\label{sec:org926da5d}
 There is a recent ATLAS measurement \href{https://atlas.web.cern.ch/Atlas/GROUPS/PHYSICS/CONFNOTES/ATLAS-CONF-2023-013/}{ATLAS-CONF-2023-013} that is inclusive in the lepton kinematics and thus suitable for performing a simple comparison here.
 Let's execute our code that we exported above and save the output to a file
 \begin{minted}[frame=lines,fontsize=\scriptsize]{shell}

@@ -30,7 +30,7 @@ Nonetheless, this simple formula already allows us to inspect some important fea
 We start with a simple implementation of the above formula.
 
 ** Python
-The integral is a bit nasty because of the oscillating behaviour of the Bessel funtion $J_0$ so we need to adjust the =scipy.integrate= settings a little bit to reach a desired accuracy.
+The integral is a bit nasty because of the oscillating behaviour of the Bessel function $J_0$ so we need to adjust the =scipy.integrate= settings a little bit to reach a desired accuracy.
 Despite that, the implementation is straightforward:
 #+INCLUDE: "main.py" src python
 
@@ -70,7 +70,6 @@ We can compare this expression with the numerically evaluated b-space formula fr
 #+begin_src gnuplot :file plot_QT2.png
 reset
 set terminal pngcairo enhanced
-set colorsequence podo
 
 set log x
 set xlabel 'q_T^2 [GeV^2]'
@@ -86,7 +85,7 @@ CF = 4./3.
 ana(qt) = (as*CF/pi) * (1./qt**2) * log(Q**2/qt**2) * exp(-as*CF/(2.*pi)*log(Q**2/qt**2)**2)
 
 plot "data_dy.dat" u ($1**2):2 w lp ls 1 t 'b-space', \
-     "mma_dy.dat"  u ($1**2):2 w l  ls 4 dt 3 notitle, \
+     "mma_dy.dat"  u ($1**2):2 w l  ls 2 dt 3 notitle, \
      "+" u 1:(ana($1)) w l ls 7 t 'leading'
 #+end_src
 
@@ -120,7 +119,7 @@ We now look at the transverse momentum distribution, which we simply get by
   \,,
 \end{align}
 from the data we generated.
-We can contrast it to the divegent behaviour
+We can contrast it to the divergent behaviour
 \begin{align}
   \frac{1}{\sigma_0}\,\frac{\mathrm{d}\sigma}{\mathrm{d}q_T^2}
   &=
@@ -130,7 +129,6 @@ of an NLO fixed-order prediction (dashed lines).
 #+begin_src gnuplot :file plot_dy.png
 reset
 set terminal pngcairo enhanced
-set colorsequence podo
 
 set log x
 set xrange [*:1e2]
@@ -156,4 +154,4 @@ plot "data_dy.dat" u 1:(2.*$1*$2)        w lp ls 1 t 'Drell-Yan', \
 [[file:plot_dy.png]]
 Note that $\mathrm{d}\sigma/\mathrm{d}q_T$ vanishes for $q_T\to0$, however, the $q_T^2$ behaviour we discussed in the previous section makes it a power-like suppression rather than an exponential one we would get from the naive leading behaviour.
 The resummation tames the divergent fixed-order behaviour and the turn-around point is also often called the "Sudakov peak".
-We see that due to the larger colour charge in the gluon-induced Higgs process ($C_A = 3 > \tfrac{4}{3} = C_F$), the localtion of the Sudakov peak is further to the right.
+We see that due to the larger colour charge in the gluon-induced Higgs process ($C_A = 3 > \tfrac{4}{3} = C_F$), the location of the Sudakov peak is further to the right.

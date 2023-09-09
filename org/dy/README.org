@@ -267,6 +267,8 @@ Unfortunately, this is still a conference note so there's no public data availab
 Fortunately, there are tools like [[https://arxiv.org/abs/0710.2896][EasyNData]] that allows us to extract data out of plots :)
 The rapidity distribution with the relative errors is in the file =ATLAS.dat= and we can plot it against our prediction:
 #+begin_src gnuplot :file Yll.png
+reset
+set terminal pngcairo
 unset log x
 set xlabel '|Y_{ℓℓ}|'
 set xrange [0:3.6]

@@ -41,7 +41,9 @@ for ix, x in enumerate(xs):
 return res
 #+end_src
 
-#+begin_src gnuplot :var data=lhapdf_xfx(10,1) :var fac=0.1 :file pdf_xfx.png
+#+begin_src gnuplot :var data=lhapdf_xfx(5,1) :var fac=0.1 :file pdf_xfx.png
+reset
+set terminal pngcairo
 set log x
 set xlabel "x"
 set xrange [1e-5:1]

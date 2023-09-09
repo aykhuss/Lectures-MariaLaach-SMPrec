@@ -1,4 +1,4 @@
-% Created 2023-08-30 Wed 10:10
+% Created 2023-09-08 Fri 17:36
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -34,12 +34,12 @@
 
 
 \section{Introduction}
-\label{sec:org3533e17}
+\label{sec:org63f5f8b}
 In the lectures we have seen a brief overview of the \(q_T\) resummation formalism for the Drell-Yan process.
 We will have a closer look at the main results here and highlight some features.
 
 \section{\(q_T\) resummation}
-\label{sec:org5242176}
+\label{sec:org55bc890}
 In the leading double-logarithmic approximation, we have found the following result in impact parameter space
 \begin{align}
 \label{eq:b-space}
@@ -56,12 +56,12 @@ Nonetheless, this simple formula already allows us to inspect some important fea
 
 
 \section{Implementation}
-\label{sec:org394c021}
+\label{sec:orge299494}
 We start with a simple implementation of the above formula.
 
 \subsection{Python}
-\label{sec:org2e3e44d}
-The integral is a bit nasty because of the oscillating behaviour of the Bessel funtion \(J_0\) so we need to adjust the \texttt{scipy.integrate} settings a little bit to reach a desired accuracy.
+\label{sec:orgbebce18}
+The integral is a bit nasty because of the oscillating behaviour of the Bessel function \(J_0\) so we need to adjust the \texttt{scipy.integrate} settings a little bit to reach a desired accuracy.
 Despite that, the implementation is straightforward:
 \begin{minted}[frame=lines,fontsize=\scriptsize]{python}
 #!/usr/bin/env python
@@ -75,7 +75,7 @@ alpha_s: float = 0.118
 
 
 def res_integrand(b: float, QT: float, Q: float, CX: float) -> float:
-    b0: float = 2. * exp(-0.57721566490153286061)
+    # b0: float = 2. * exp(-0.57721566490153286061)
     # blim: float = 5.  # should be > 1/Lambda_QCD ~ 5
     # bs2: float = b**2 * blim**2 / (b**2 + blim**2)
     # return (b / 2.) * jv(0, b * QT) * exp(
@@ -124,7 +124,7 @@ python main.py 125 g > data_h.dat
 \end{minted}
 
 \subsection{Mathematica}
-\label{sec:org34b8f81}
+\label{sec:org84853df}
 To cross-check the numerics, we can use a simple Mathematica implementation
 \begin{minted}[frame=lines,fontsize=\scriptsize]{wolfram}
 dSigQT2[qt_] := Module[{cf = 4/3, as = 0.118, q = 91},
@@ -136,10 +136,10 @@ Export["mma_dy.dat", datQT2, "Table", "FieldSeparators" -> " "]
 
 
 \section{Playground}
-\label{sec:org2b3ed46}
+\label{sec:org192f5a7}
 
 \subsection{Low-\(q_T^2\) behaviour}
-\label{sec:orgce81e6a}
+\label{sec:orgbe0d671}
 Let us have a look at the analytic expression for \(\mathrm{d}\sigma/\mathrm{d}q_T^2\) in the leading double-logarithmic approximation in momentum space.
 \begin{align}
   \frac{1}{\sigma_0}\,\frac{\mathrm{d}\sigma}{\mathrm{d}q_T^2}
@@ -176,7 +176,7 @@ We have also superimposed a dotted line obtained from the Mathematica implementa
 At high \(q_T\), the oscillations become very severe rendering the pPython predictions less reliable (with larger integration errors).
 
 \subsection{Transverse Momentum Distributioins}
-\label{sec:orga755d2d}
+\label{sec:org713124f}
 We now look at the transverse momentum distribution, which we simply get by
 \begin{align}
   \frac{\mathrm{d}\sigma}{\mathrm{d}q_T}
@@ -185,7 +185,7 @@ We now look at the transverse momentum distribution, which we simply get by
   \,,
 \end{align}
 from the data we generated.
-We can contrast it to the divegent behaviour
+We can contrast it to the divergent behaviour
 \begin{align}
   \frac{1}{\sigma_0}\,\frac{\mathrm{d}\sigma}{\mathrm{d}q_T^2}
   &=
@@ -197,5 +197,5 @@ of an NLO fixed-order prediction (dashed lines).
 \end{center}
 Note that \(\mathrm{d}\sigma/\mathrm{d}q_T\) vanishes for \(q_T\to0\), however, the \(q_T^2\) behaviour we discussed in the previous section makes it a power-like suppression rather than an exponential one we would get from the naive leading behaviour.
 The resummation tames the divergent fixed-order behaviour and the turn-around point is also often called the ``Sudakov peak''.
-We see that due to the larger colour charge in the gluon-induced Higgs process (\(C_A = 3 > \tfrac{4}{3} = C_F\)), the localtion of the Sudakov peak is further to the right in that case.
+We see that due to the larger colour charge in the gluon-induced Higgs process (\(C_A = 3 > \tfrac{4}{3} = C_F\)), the location of the Sudakov peak is further to the right.
 \end{document}

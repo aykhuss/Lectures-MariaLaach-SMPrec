@@ -1,4 +1,4 @@
-% Created 2023-07-30 Sun 17:36
+% Created 2023-09-08 Fri 14:09
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -23,7 +23,7 @@
  pdftitle={Parton Distribution Functions},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 28.2 (Org mode 9.7)}, 
+ pdfcreator={Emacs 29.1 (Org mode 9.7)}, 
  pdflang={English}}
 \begin{document}
 
@@ -33,11 +33,11 @@
 
 
 \section{Introduction}
-\label{sec:org76b74a7}
+\label{sec:orgb5a7dd4}
 We will call the \href{https://lhapdf.hepforge.org/}{LHAPDF} library from python to evaluate parton distribution functions and play around with them a bit.
 
 \section{Evaluating PDFs}
-\label{sec:orge6e5fa1}
+\label{sec:orga14e264}
 Let's have a look at one specific PDF set \texttt{PDF4LHC21\_40}
 
 \begin{minted}[frame=lines,fontsize=\scriptsize]{python}
@@ -81,7 +81,7 @@ Does it correspond to the expectation of the QCD improved parton model?
 \end{quote}
 
 \section{The quantum numbers of the proton}
-\label{sec:org910f48a}
+\label{sec:orge85e3fe}
 The quantum numbers of the proton are determined by the valence quarks, p=(uud).
 Given that PDFs are \emph{number densities} for the constituent partons, the following flavour sum rules hold:
 \begin{align}
@@ -128,7 +128,7 @@ b & -8.819432616743546e-05\\[0pt]
 \end{center}
 
 \section{Momentum sum rules}
-\label{sec:orgbeb4503}
+\label{sec:org804dd90}
 The parton \(a\) carries a momentum fraction \(x_a\) of the parent hadron, \(p_a^\mu=x_a\,P^\mu\).
 Therefore, the momentum density associated with that parton is given by \$x\textsubscript{a$\backslash$,f}\textsubscript{a\(\vert{}\) H}(x\textsubscript{a}).
 Since the sum over all parton momenta must sum back up to the parent hadron one, the PDF sets satisfy a \emph{momentum sum rule} (in \(\overline{\text{MS}}\)):
