@@ -1,4 +1,4 @@
-% Created 2023-09-08 Fri 17:12
+% Created 2023-11-12 Sun 11:45
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -33,13 +33,13 @@
 
 
 \section{Introduction}
-\label{sec:org97aa8b4}
+\label{sec:org381a2be}
 Let us study a simple toy example for an NLO calculation and investigate what challenges arise in the context of fully differential predictions.
 We will further have a look at two strategies to implement the IRC calcellation differentially: local subtractions and slicing.
 These will be contrasted in their respective properties and performance.
 
 \section{Inclusive calculation}
-\label{sec:org2bc3730}
+\label{sec:orgf77f1aa}
 Let us first set the stage by considering our toy example in an \emph{inclusive} setup, i.e. where we have no restrictions on the phase space whatsoever (think: total cross section).
 We use dimensional regularization (\(D=4-2\epsilon\)) to regulate all divergences and will drop all terms \(\mathcal{O}(\epsilon)\) in the expressions that follow.
 We further assume that the Born kinematics is fully constraint such that they do not involve any integration.
@@ -71,7 +71,7 @@ We can appreciate how the singularities (poles in \(\epsilon\)) cancel between t
 \end{align}
 
 \section{Differential predictions}
-\label{sec:org26b44f5}
+\label{sec:org8bd007e}
 In a differential setup we want to admit arbitraty (IRC safe) measurement functions to act on the phase space.
 Since in this simple toy example the Born phase space is fully constrained, this means we have to allow for an arbitrary function to appear in the integrand of the real corrections and the virtual piece only gets multiplied by that function in the Born limit, i.e. \(x\equiv0\).
 In summary, the pieces we need to evaluate are, c.f. Eq. \eqref{eq:inc},
@@ -96,14 +96,14 @@ To expose the singularity, we need to perform some (partial) integration of the 
 These seemingly contradicting requirements are what is sloved using so-called \emph{subtraction methods}, which rearrange the divergences so we end up with only well-defined (finite) integrals that we can do numerically.
 
 \subsection{Local Subtraction}
-\label{sec:org30ac1cf}
+\label{sec:orgcf9bc07}
 The local subtraction follows a very common strategy in solving physics problems: find a suitable prarametrisation of a zero.
 We essentially subtract something differentially and add the same quantity back in integrated form.
 For this to work, we need a very good understanding of how the singularities arise in our calculations.
 In real applications one exploits \emph{factorization} in the IRC limits to devise universal methods to deal with the singularities.
 
 Here, the situation is very simple: the singularity comes from the \(x\to0\) limit of the real-emission integral.
-So we can find a very simple prescription to isolate the singularity by rewriting the real-emission corresions as foloows
+So we can find a very simple prescription to isolate the singularity by rewriting the real-emission corrections as follows
 \begin{align}
   \sigma^\mathrm{R}_\mathrm{diff.}
   &=
@@ -133,9 +133,9 @@ Combining this with the virtual corrections, we can appreciate how a local subtr
 \end{align}
 
 \subsubsection{Implementation}
-\label{sec:orgbf4abc5}
+\label{sec:orgdf0aff9}
 The implementation of \eqref{eq:subtr} in a python function is straighforward.
-We choose the VEGAS algorithm to integrate the real-emission ``phase space'' and give the number of calls (events) as an argument so wo can compare the performance later
+We choose the VEGAS algorithm to integrate the real-emission ``phase space'' and give the number of calls (events) as an argument so we can compare the performance later
 \begin{minted}[frame=lines,fontsize=\scriptsize]{python}
 def subtr_dNLO(ncall: int) -> tuple[float, float]:
 
@@ -150,7 +150,7 @@ def subtr_dNLO(ncall: int) -> tuple[float, float]:
 \end{minted}
 
 \subsection{Non-Local Subtraction: Slicing}
-\label{sec:org9bbd365}
+\label{sec:orga921d4d}
 In a non-local subtraction, or \emph{slicing} approach, one exploits the fact that the divergence can be isolated with some resolution variable on which we place a cut to regulate the divergence.
 It is important to note that slicing methods are not ``exact'' but come with an error that must be controlled and estimated.
 
@@ -180,7 +180,9 @@ In this toy example, we already know that the singularity arises from the \(x\to
 The crucial step is in the third line, where we expanded \(\mathcal{J}(x) \simeq \mathcal{J}(0) + \mathcal{O}(\xi^n)\), again allowing to pull out the measurement function out of the integral that diverges.
 It also becomes clear that there's explicitly an \emph{error} that we make by expanding the measurement function this way and that we'll want to take \(\xi\) as small as possible.
 However, we also see that the regulator induces a \(\ln(\xi)\) term that blows up as we take \(\xi\to0\) and we will see how that impacts the performance of the method later.
-The power of the error term will depend on the parameter/observable we choose (\(x\)) and the measurement function \(\mathcal{J}\).
+The power \(n\) of the error term will depend on the parameter/observable we choose (\(x\)) and the measurement function \(\mathcal{J}\).
+Also note that in real-world applications of the method, the ``below-cut'' contribution (\(x\in[0,\xi]\)) is typically obtained by expanding a resummation formula for \(x\) to the appropriate order.
+Typically, these expressions are only known to leading power (LP) in \(x\) and therefore there is an additional source of power corrections \(\sim\xi^m\) from next-to-leading power (NLP) terms that also contributes to the error.
 
 Combining the terms with the virtual corrections, we get the slicing result with the \(\xi\) \emph{cutoff} parameter
 dependence and an associated error
@@ -195,7 +197,7 @@ dependence and an associated error
 \end{align}
 
 \subsubsection{Implementation}
-\label{sec:orgc10afca}
+\label{sec:org217e96d}
 The implementation of \eqref{eq:slice} in a python function is analogous to the subtraction case above.
 This time, we also have the cutoff parameter \(\xi\) as an argument as we'll want to vary it and see how the errors change.
 \begin{minted}[frame=lines,fontsize=\scriptsize]{python}
@@ -217,7 +219,7 @@ def slice_dNLO(xi: float, ncall: int) -> tuple[float, float]:
 
 
 \section{Playground}
-\label{sec:org4668aea}
+\label{sec:org66b1b1b}
 Let us export the two approaches we introduced above and compare their performance.
 For simplicity we'll set the constants in the virtual and real corrections to one
 \begin{minted}[frame=lines,fontsize=\scriptsize]{python}
@@ -225,7 +227,7 @@ For simplicity we'll set the constants in the virtual and real corrections to on
 a: float = 1.
 b: float = 1.
 \end{minted}
-For the measurement function, we implement a few to test the dependence of the methods on it properties.
+For the measurement function, we implement a few to test the dependence of the methods on its properties.
 \begin{minted}[frame=lines,fontsize=\scriptsize]{python}
 # the measurement function (global flag as switch)
 iJ: int = 1
@@ -255,7 +257,7 @@ def J(x: float) -> float:
 
 
 \subsection{Export source code}
-\label{sec:org528d21c}
+\label{sec:org241b7bb}
 We can export the python source code to a file \texttt{main.py}:
 \begin{minted}[frame=lines,fontsize=\scriptsize]{python}
 import math
@@ -351,13 +353,13 @@ python main.py slice 1000   -4 -1 50 > data_slice.dat
 python main.py slice 10000  -4 -1 50 > data_slice_10.dat
 python main.py slice 100000 -4 -1 50 > data_slice_100.dat
 \end{minted}
-Time to plot the results; let up start with the \(N_\mathrm{call}=1000\) case:
+Time to plot the results; let us start with the \(N_\mathrm{call}=1000\) case:
 \begin{center}
 \includegraphics[width=.9\linewidth]{data.png}
 \end{center}
 We see that the local subtraction yields much smaller uncertainties than the slicing method for the same number of events.
 We further see the error, which in this default setup is \emph{linear} \(\mathcal{O}(\xi)\), increases as we choose larger values of the cutoff.
-Smaller \(\xi\) makes the results less stable; the reason is the large log \(\ln(\xi)\) in Eq. \eqref{eq:slice}, which must compensate against the cut-off regulated real-emission part.
+Smaller \(\xi\) makes the results less stable; the reason is the large logarithm \(\ln(\xi)\) in Eq. \eqref{eq:slice}, which must compensate against the cut-off regulated real-emission part.
 
 From the plot, and the numerical accuracy we have achieved, the result starts to stabilize at around \(\xi \simeq 10^{-2}\).
 However, this is a statement that depends on the accuracy target we have on the final result.

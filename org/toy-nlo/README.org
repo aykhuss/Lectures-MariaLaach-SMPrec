@@ -72,7 +72,7 @@ For this to work, we need a very good understanding of how the singularities ari
 In real applications one exploits /factorization/ in the IRC limits to devise universal methods to deal with the singularities.
 
 Here, the situation is very simple: the singularity comes from the $x\to0$ limit of the real-emission integral.
-So we can find a very simple prescription to isolate the singularity by rewriting the real-emission corresions as foloows
+So we can find a very simple prescription to isolate the singularity by rewriting the real-emission corrections as follows
 \begin{align}
   \sigma^\mathrm{R}_\mathrm{diff.}
   &=
@@ -106,7 +106,7 @@ Combining this with the virtual corrections, we can appreciate how a local subtr
 :header-args: :noweb-ref subtr
 :END:
 The implementation of eqref:eq:subtr in a python function is straighforward.
-We choose the VEGAS algorithm to integrate the real-emission "phase space" and give the number of calls (events) as an argument so wo can compare the performance later
+We choose the VEGAS algorithm to integrate the real-emission "phase space" and give the number of calls (events) as an argument so we can compare the performance later
 #+begin_src python
 def subtr_dNLO(ncall: int) -> tuple[float, float]:
 
@@ -150,7 +150,9 @@ In this toy example, we already know that the singularity arises from the $x\to0
 The crucial step is in the third line, where we expanded $\mathcal{J}(x) \simeq \mathcal{J}(0) + \mathcal{O}(\xi^n)$, again allowing to pull out the measurement function out of the integral that diverges.
 It also becomes clear that there's explicitly an /error/ that we make by expanding the measurement function this way and that we'll want to take $\xi$ as small as possible.
 However, we also see that the regulator induces a $\ln(\xi)$ term that blows up as we take $\xi\to0$ and we will see how that impacts the performance of the method later.
-The power of the error term will depend on the parameter/observable we choose ($x$) and the measurement function $\mathcal{J}$.
+The power $n$ of the error term will depend on the parameter/observable we choose ($x$) and the measurement function $\mathcal{J}$.
+Also note that in real-world applications of the method, the "below-cut" contribution ($x\in[0,\xi]$) is typically obtained by expanding a resummation formula for $x$ to the appropriate order.
+Typically, these expressions are only known to leading power (LP) in $x$ and therefore there is an additional source of power corrections $\sim\xi^m$ from next-to-leading power (NLP) terms that also contributes to the error.
 
 Combining the terms with the virtual corrections, we get the slicing result with the $\xi$ /cutoff/ parameter
 dependence and an associated error
@@ -196,7 +198,7 @@ For simplicity we'll set the constants in the virtual and real corrections to on
 a: float = 1.
 b: float = 1.
 #+end_src
-For the measurement function, we implement a few to test the dependence of the methods on it properties.
+For the measurement function, we implement a few to test the dependence of the methods on its properties.
 #+begin_src python :noweb-ref Jfunc
 # the measurement function (global flag as switch)
 iJ: int = 1
@@ -279,8 +281,12 @@ python main.py slice 1000   -4 -1 50 > data_slice.dat
 python main.py slice 10000  -4 -1 50 > data_slice_10.dat
 python main.py slice 100000 -4 -1 50 > data_slice_100.dat
 #+end_src
-Time to plot the results; let up start with the $N_\mathrm{call}=1000$ case:
+Time to plot the results; let us start with the $N_\mathrm{call}=1000$ case:
 #+begin_src gnuplot :file data.png
+reset
+set terminal pngcairo
+set pointintervalbox 0
+
 set log x
 set xlabel 'ξ'
 set xrange [1e-4:1]
@@ -300,13 +306,17 @@ plot "+" u 1:(subtr_val-subtr_err):(subtr_val+subtr_err) ls 1 with filledcurves 
 [[file:data.png]]
 We see that the local subtraction yields much smaller uncertainties than the slicing method for the same number of events.
 We further see the error, which in this default setup is /linear/ $\mathcal{O}(\xi)$, increases as we choose larger values of the cutoff.
-Smaller $\xi$ makes the results less stable; the reason is the large log $\ln(\xi)$ in Eq. eqref:eq:slice, which must compensate against the cut-off regulated real-emission part.
+Smaller $\xi$ makes the results less stable; the reason is the large logarithm $\ln(\xi)$ in Eq. eqref:eq:slice, which must compensate against the cut-off regulated real-emission part.
 
 From the plot, and the numerical accuracy we have achieved, the result starts to stabilize at around $\xi \simeq 10^{-2}$.
 However, this is a statement that depends on the accuracy target we have on the final result.
 To make that point clear, let's look at the data with higher statistics and see how things compare
 
 #+begin_src gnuplot :file data_zoom.png
+reset
+set terminal pngcairo
+set pointintervalbox 0
+
 set log x
 set xlabel 'ξ'
 set xrange [1e-4:5e-2]
